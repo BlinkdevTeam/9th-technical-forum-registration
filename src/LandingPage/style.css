@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "BoehringerForwardTextRegular";
+    src: url("../font/BI-bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "BoehringerForwardTextItalic";
+    src: url("../font/Boehringer Forward.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Default (mobile first) */
+h1 {
+    font-family: "BoehringerForwardTextRegular", sans-serif;
+    font-weight: bold;
+}
+
+.sub-bi-heading {
+    font-family: "BoehringerForwardTextRegular", sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 42px;
+}
+
+.sub-bi-paragraph {
+    font-family: "BoehringerForwardTextItalic", sans-serif;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 20px;
+}
+
+/* Large screens (desktop) */
+@media (min-width: 1024px) {
+    .sub-bi-heading {
+        font-size: 24px;
+    }
+
+    .sub-bi-paragraph {
+        font-size: 30px;
+    }
+}

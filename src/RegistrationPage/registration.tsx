@@ -1,6 +1,10 @@
 import { useState } from "react";
 import supabase from "../../lib/supabaseClient";
 import emailjs from "@emailjs/browser";
+import "./style.css";
+import TechnicalForum from "../assets/BI_9thCATF_LOGO.png";
+import BILogo from "../assets/BI_LOGO_NEONGREEN.png";
+import BIDog from "../assets/Boehringer_AnimalCare_Dog_WalkingtheDog-01_CMYK_002 copy.jpg";
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -77,95 +81,177 @@ export default function RegistrationForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-lg mx-auto p-4 border rounded space-y-3"
-    >
-      <h2 className="text-2xl font-semibold mb-4">
-        Medical Professional Registration
-      </h2>
+    <>
+      <main className="w-screen overflow-x-hidden">
+        <section className="grid grid-cols-1 lg:grid-cols-[40%_60%]">
+          <div className="bg-[#08312A] w-full min-h-screen flex flex-col justify-center items-center">
+            <div className="flex flex-col overflow-hidden px-4">
+              <div className="flex flex-col justify-start items-start max-w-screen-lg w-full gap-16 px-4">
+                <div>
+                  <img
+                    src={BILogo}
+                    alt="Boehringer Ingelheim"
+                    className="mx-auto h-10 md:h-14"
+                  />
+                </div>
+                <div>
+                  <img
+                    src={TechnicalForum}
+                    alt="Technical Forum Logo"
+                    className="mx-auto h-40 md:h-64"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-bold sub-bi-heading text-start">
+                    Join us for a day of insightful discussions and updates in
+                    companion animal health — May 28, 2025 at Crimson Hotel,
+                    Alabang, Muntinlupa City. Secure your spot today!
+                  </h3>
+                </div>
+              </div>
+            </div>
 
-      <input
-        name="email_address"
-        type="email"
-        required
-        placeholder="Email address"
-        value={formData.email_address}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="first_name"
-        required
-        placeholder="First name"
-        value={formData.first_name}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="middle_name"
-        placeholder="Middle name"
-        value={formData.middle_name}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="last_name"
-        required
-        placeholder="Last name"
-        value={formData.last_name}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="clinic"
-        placeholder="Name of Clinic/Hospital"
-        value={formData.clinic}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="address"
-        placeholder="Address"
-        value={formData.address}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="mobile_number"
-        required
-        placeholder="Mobile number"
-        value={formData.mobile_number}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="prc_license"
-        required
-        placeholder="PRC License"
-        value={formData.prc_license}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="prc_expiration"
-        type="date"
-        required
-        placeholder="PRC Card Expiration"
-        value={formData.prc_expiration}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
+            {/* Absolute "Life Forward" over dog image */}
+            <div className="w-full relative">
+              <div className="flex justify-center items-center">
+                <img
+                  src={BIDog}
+                  alt="Dog"
+                  className="mx-auto w-full object-cover"
+                />
+              </div>
+              <p className="absolute bottom-4 right-8 text-white sub-bi-paragraph z-10">
+                Life Forward
+              </p>
+            </div>
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white py-2 rounded"
-      >
-        {loading ? "Submitting..." : "Register"}
-      </button>
+          <div className="bg-[#F6F5F3] text-black">
+            <form
+              onSubmit={handleSubmit}
+              className="max-w-full p-4 rounded space-y-3 text-start"
+            >
+              <p className="text-[16px]">LET’S GET YOU STARTED</p>
+              <h2>Register</h2>
+              <div className="flex flex-col">
+                <p className="text-[16px]">Your email</p>
+                <input
+                  name="email_address"
+                  type="email"
+                  required
+                  placeholder="Email address"
+                  value={formData.email_address}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="flex gap-4">
+                <div className="flex flex-col">
+                  <p className="text-[16px]">First Name</p>
+                  <input
+                    name="first_name"
+                    required
+                    placeholder="First name"
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[16px]">Middle Name</p>
+                  <input
+                    name="middle_name"
+                    placeholder="Middle name"
+                    value={formData.middle_name}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex flex-col">
+                  <p className="text-[16px]">Last Name</p>
+                  <input
+                    name="last_name"
+                    required
+                    placeholder="Last name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[16px]">Name of Clinic / Hospital</p>
+                  <input
+                    name="clinic"
+                    placeholder="Name of Clinic/Hospital"
+                    value={formData.clinic}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex flex-col">
+                  <p className="text-[16px]">Address</p>
+                  <input
+                    name="address"
+                    placeholder="Address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[16px]">Mobile Number</p>
+                  <input
+                    name="mobile_number"
+                    required
+                    placeholder="Mobile number"
+                    value={formData.mobile_number}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex flex-col">
+                  <p className="text-[16px]">PRC License</p>
+                  <input
+                    name="prc_license"
+                    required
+                    placeholder="PRC License"
+                    value={formData.prc_license}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[16px]">PRC Card Expiration</p>
+                  <input
+                    name="prc_expiration"
+                    type="date"
+                    required
+                    placeholder="PRC Card Expiration"
+                    value={formData.prc_expiration}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-2 rounded"
+              >
+                {loading ? "Submitting..." : "Submit"}
+              </button>
 
-      {message && <p className="text-center mt-2">{message}</p>}
-    </form>
+              {message && <p className="text-center mt-2">{message}</p>}
+            </form>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

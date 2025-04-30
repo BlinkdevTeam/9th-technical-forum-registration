@@ -1,5 +1,6 @@
 import TechnicalForum from "../assets/BI_9thCATF_LOGO.png";
 import BILogo from "../assets/BI_LOGO_NEONGREEN.png";
+import "./style.css";
 
 export default function Home() {
   return (
@@ -21,16 +22,14 @@ export default function Home() {
             />
           </div>
           <div>
-            <h3 className="text-lg md:text-xl lg:text-2xl font-bold">
+            <h3 className="sub-bi-heading">
               MAY 28, 2025 | 9:00 - 4:00 PM
               <br />
               Crimson Hotel, Alabang, Muntinlupa City
             </h3>
           </div>
           <div>
-            <p className="text-[#00E47C] text-2xl md:text-3xl font-bold italic">
-              Life Forward
-            </p>
+            <p className="text-[#00E47C] sub-bi-paragraph">Life Forward</p>
           </div>
         </div>
       </div>

@@ -1,24 +1,15 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "BoehringerForwardText";
-  src: url("./font/Boehringer\ Forward.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "BoehringerForwardTextRegular";
-  src: url("./font/Boehringer\ Forward\ Text.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
 #root {
   max-width: 1280px;
   margin: 0 auto;
   /* padding: 2rem; */
   text-align: center;
+}
+
+html,
+body {
+  overflow-x: hidden;
 }
 
 .logo {
@@ -55,30 +46,4 @@
 
 .read-the-docs {
   color: #888;
-}
-
-/* Default (mobile first) */
-h3 {
-  font-family: "BoehringerForwardTextRegular", sans-serif;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 42px;
-}
-
-p {
-  font-family: "BoehringerForwardText", sans-serif;
-  font-weight: bold;
-  font-style: italic;
-  font-size: 20px;
-}
-
-/* Large screens (desktop) */
-@media (min-width: 1024px) {
-  h3 {
-    font-size: 24px;
-  }
-
-  p {
-    font-size: 30px;
-  }
 }
