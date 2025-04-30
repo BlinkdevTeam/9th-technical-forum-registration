@@ -57,37 +57,27 @@
   color: #888;
 }
 
+/* Default (mobile first) */
 h3 {
   font-family: "BoehringerForwardTextRegular", sans-serif;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 p {
   font-family: "BoehringerForwardText", sans-serif;
   font-weight: bold;
   font-style: italic;
-  font-size: 24px;
+  font-size: 20px;
 }
 
-/* Medium screens (tablets) */
-@media (min-width: 768px) {
+/* Large screens (desktop) */
+@media (min-width: 1024px) {
   h3 {
     font-size: 24px;
   }
 
   p {
     font-size: 30px;
-  }
-}
-
-/* Large screens (desktops) */
-@media (min-width: 1024px) {
-  h3 {
-    font-size: 28px;
-  }
-
-  p {
-    font-size: 36px;
   }
 }
