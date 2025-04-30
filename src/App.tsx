@@ -1,5 +1,6 @@
 import { useState } from "react";
 import supabase from "../lib/supabaseClient";
+import emailjs from "@emailjs/browser";
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -7,22 +8,44 @@ export default function RegistrationForm() {
     first_name: "",
     middle_name: "",
     last_name: "",
-    clinic_or_hospital: "",
+    clinic: "",
     address: "",
     mobile_number: "",
     prc_license: "",
-    prc_card_expiration: "",
+    prc_expiration: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const sendConfirmationEmail = () => {
+    const templateParams = {
+      to_name: `${formData.first_name} ${formData.last_name}`,
+      email: formData.email_address,
+      clinic: formData.clinic,
+    };
+
+    emailjs
+      .send(
+        "service_1qkyi2i", // 🔁 Replace with actual service ID
+        "template_ein4wz4", // 🔁 Replace with actual template ID
+        templateParams,
+        "sOTpCYbD5KllwgbCD" // 🔁 Replace with actual public key
+      )
+      .then(() => {
+        console.log("Email sent successfully");
+      })
+      .catch((error) => {
+        console.error("Email sending error:", error);
+      });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
@@ -35,17 +58,18 @@ export default function RegistrationForm() {
       console.error("Error inserting record:", error.message);
       setMessage("Registration failed. Please try again.");
     } else {
+      sendConfirmationEmail(); // ✅ Send email on success
       setMessage("Registration successful!");
       setFormData({
         email_address: "",
         first_name: "",
         middle_name: "",
         last_name: "",
-        clinic_or_hospital: "",
+        clinic: "",
         address: "",
         mobile_number: "",
         prc_license: "",
-        prc_card_expiration: "",
+        prc_expiration: "",
       });
     }
 
@@ -94,9 +118,9 @@ export default function RegistrationForm() {
         className="w-full p-2 border rounded"
       />
       <input
-        name="clinic_or_hospital"
+        name="clinic"
         placeholder="Name of Clinic/Hospital"
-        value={formData.clinic_or_hospital}
+        value={formData.clinic}
         onChange={handleChange}
         className="w-full p-2 border rounded"
       />
@@ -124,11 +148,11 @@ export default function RegistrationForm() {
         className="w-full p-2 border rounded"
       />
       <input
-        name="prc_card_expiration"
+        name="prc_expiration"
         type="date"
         required
         placeholder="PRC Card Expiration"
-        value={formData.prc_card_expiration}
+        value={formData.prc_expiration}
         onChange={handleChange}
         className="w-full p-2 border rounded"
       />
