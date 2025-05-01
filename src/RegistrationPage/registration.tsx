@@ -6,7 +6,7 @@ import TechnicalForum from "../assets/BI_9thCATF_LOGO.png";
 import BILogo from "../assets/BI_LOGO_NEONGREEN.png";
 import BIDog from "../assets/Boehringer_AnimalCare_Dog_WalkingtheDog-01_CMYK_002 copy.jpg";
 
-export default function RegistrationForm() {
+export default function RegistrationForm({ email }) {
   const [formData, setFormData] = useState({
     email_address: "",
     first_name: "",
@@ -21,6 +21,8 @@ export default function RegistrationForm() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,7 +54,29 @@ export default function RegistrationForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
+    setShowModal(false);
+    setModalMessage("");
+
+    const { data: existingUser, error: fetchError } = await supabase
+      .from("medical_professionals")
+      .select("*")
+      .eq("email_address", formData.email_address)
+      .single();
+
+    if (fetchError && fetchError.code !== "PGRST116") {
+      console.error("Error checking email existence:", fetchError.message);
+      setModalMessage("Something went wrong. Please try again later.");
+      setShowModal(true);
+      setLoading(false);
+      return;
+    }
+
+    if (existingUser) {
+      setModalMessage("This email is already registered.");
+      setShowModal(true);
+      setLoading(false);
+      return;
+    }
 
     const { error } = await supabase
       .from("medical_professionals")
@@ -60,10 +84,12 @@ export default function RegistrationForm() {
 
     if (error) {
       console.error("Error inserting record:", error.message);
-      setMessage("Registration failed. Please try again.");
+      setModalMessage("Registration failed. Please try again.");
     } else {
-      sendConfirmationEmail(); // ✅ Send email on success
-      setMessage("Registration successful!");
+      sendConfirmationEmail();
+      setModalMessage(
+        "Registration successful! \n\nCheck your email to get your ticket to the event."
+      );
       setFormData({
         email_address: "",
         first_name: "",
@@ -77,32 +103,49 @@ export default function RegistrationForm() {
       });
     }
 
+    setShowModal(true);
     setLoading(false);
   };
 
   return (
     <>
-      <main className="w-screen overflow-x-hidden">
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 ">
+          <div className="bg-white rounded-lg p-6 w-[90%] max-w-md text-center shadow-lg space-y-4">
+            <h3 className="text-lg font-semibold text-[#08312A]">Notice</h3>
+            <p className="text-gray-700 whitespace-pre-wrap">{modalMessage}</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-4 px-6 py-2 bg-[#08312A] text-white rounded hover:bg-[#06291E] transition"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+      <main className="w-screen min-h-screen lg:max-h-screen overflow-hidden">
         <section className="grid grid-cols-1 lg:grid-cols-[40%_60%]">
-          <div className="bg-[#08312A] w-full min-h-screen flex flex-col justify-center items-center">
-            <div className="flex flex-col overflow-hidden px-4">
+          <div className="bg-[#08312A] w-full min-h-screen grid grid-rows-[65%_35%]">
+            {/* Top 70% */}
+            <div className="flex flex-col justify-center items-center overflow-hidden px-4 z-10">
               <div className="flex flex-col justify-start items-start max-w-screen-lg w-full gap-16 px-4">
                 <div>
                   <img
                     src={BILogo}
                     alt="Boehringer Ingelheim"
-                    className="mx-auto h-10 md:h-14"
+                    className="mx-auto h-8 md:h-12 lg:h-12"
                   />
                 </div>
                 <div>
                   <img
                     src={TechnicalForum}
                     alt="Technical Forum Logo"
-                    className="mx-auto h-40 md:h-64"
+                    className="mx-auto h-32 md:h-48 lg:h-60"
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold sub-bi-heading text-start">
+                  <h3 className="sub-bi-heading2 text-start text-white">
                     Join us for a day of insightful discussions and updates in
                     companion animal health — May 28, 2025 at Crimson Hotel,
                     Alabang, Muntinlupa City. Secure your spot today!
@@ -111,30 +154,35 @@ export default function RegistrationForm() {
               </div>
             </div>
 
-            {/* Absolute "Life Forward" over dog image */}
-            <div className="w-full relative">
-              <div className="flex justify-center items-center">
+            {/* Bottom 30% */}
+            <div className="relative w-full h-full">
+              <div className="flex justify-center items-center overflow-hidden w-full h-full">
                 <img
                   src={BIDog}
                   alt="Dog"
-                  className="mx-auto w-full object-cover"
+                  className="mx-auto w-full h-full object-cover"
                 />
               </div>
-              <p className="absolute bottom-4 right-8 text-white sub-bi-paragraph z-10">
+              <p className="absolute bottom-8 md:bottom-16 lg:bottom-32 right-8 text-white sub-bi-paragraph z-10">
                 Life Forward
               </p>
             </div>
           </div>
 
-          <div className="bg-[#F6F5F3] text-black">
+          {/*FORM REGISTRATION*/}
+
+          <div className="bg-[#F6F5F3] text-black flex flex-col justify-center">
             <form
               onSubmit={handleSubmit}
-              className="max-w-full p-4 rounded space-y-3 text-start"
+              className="w-auto h-auto flex flex-col justify-center px-8 md:px-20 lg:px-24 py-12 rounded space-y-6 text-start"
             >
-              <p className="text-[16px]">LET’S GET YOU STARTED</p>
-              <h2>Register</h2>
+              <h2 className="sub-bi-heading text-[#878787]">
+                LET’S GET YOU STARTED
+              </h2>
+              <h2 className="bi-heading text-[#08312A]">Register</h2>
+
               <div className="flex flex-col">
-                <p className="text-[16px]">Your email</p>
+                <p className="sub-bi-heading text-[#344054]">Your email</p>
                 <input
                   name="email_address"
                   type="email"
@@ -142,108 +190,112 @@ export default function RegistrationForm() {
                   placeholder="Email address"
                   value={formData.email_address}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-3 border"
                 />
               </div>
-              <div className="flex gap-4">
-                <div className="flex flex-col">
-                  <p className="text-[16px]">First Name</p>
+              <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">First Name</p>
                   <input
                     name="first_name"
                     required
                     placeholder="First name"
                     value={formData.first_name}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-[16px]">Middle Name</p>
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">Middle Name</p>
                   <input
                     name="middle_name"
                     placeholder="Middle name"
                     value={formData.middle_name}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
               </div>
-              <div className="flex gap-4">
-                <div className="flex flex-col">
-                  <p className="text-[16px]">Last Name</p>
+
+              <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">Last Name</p>
                   <input
                     name="last_name"
                     required
                     placeholder="Last name"
                     value={formData.last_name}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-[16px]">Name of Clinic / Hospital</p>
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">
+                    Name of Clinic / Hospital
+                  </p>
                   <input
                     name="clinic"
                     placeholder="Name of Clinic/Hospital"
                     value={formData.clinic}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
               </div>
-              <div className="flex gap-4">
-                <div className="flex flex-col">
-                  <p className="text-[16px]">Address</p>
+
+              <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">Address</p>
                   <input
                     name="address"
                     placeholder="Address"
                     value={formData.address}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-[16px]">Mobile Number</p>
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">Mobile Number</p>
                   <input
                     name="mobile_number"
                     required
                     placeholder="Mobile number"
                     value={formData.mobile_number}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
               </div>
-              <div className="flex gap-4">
-                <div className="flex flex-col">
-                  <p className="text-[16px]">PRC License</p>
+
+              <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">PRC License</p>
                   <input
                     name="prc_license"
                     required
                     placeholder="PRC License"
                     value={formData.prc_license}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-[16px]">PRC Card Expiration</p>
+                <div className="flex flex-col w-full">
+                  <p className="sub-bi-heading text-[#344054]">
+                    PRC Card Expiration
+                  </p>
                   <input
                     name="prc_expiration"
                     type="date"
-                    required
                     placeholder="PRC Card Expiration"
+                    required
                     value={formData.prc_expiration}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-3 border"
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 rounded"
-              >
+
+              <button type="submit" disabled={loading} className="py-3 submit">
                 {loading ? "Submitting..." : "Submit"}
               </button>
 
