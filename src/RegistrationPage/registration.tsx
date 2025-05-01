@@ -6,9 +6,13 @@ import TechnicalForum from "../assets/BI_9thCATF_LOGO.png";
 import BILogo from "../assets/BI_LOGO_NEONGREEN.png";
 import BIDog from "../assets/Boehringer_AnimalCare_Dog_WalkingtheDog-01_CMYK_002 copy.jpg";
 
-export default function RegistrationForm({ email }) {
+interface RegistrationPageProps {
+  email: string;
+}
+
+export default function RegistrationForm({ email }: RegistrationPageProps) {
   const [formData, setFormData] = useState({
-    email_address: "",
+    email_address: email || "", // pre-fill with prop
     first_name: "",
     middle_name: "",
     last_name: "",
@@ -20,7 +24,7 @@ export default function RegistrationForm({ email }) {
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
@@ -299,7 +303,7 @@ export default function RegistrationForm({ email }) {
                 {loading ? "Submitting..." : "Submit"}
               </button>
 
-              {message && <p className="text-center mt-2">{message}</p>}
+              {/* {message && <p className="text-center mt-2">{message}</p>} */}
             </form>
           </div>
         </section>

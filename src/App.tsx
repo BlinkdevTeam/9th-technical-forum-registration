@@ -1,34 +1,34 @@
 import LandingPage from "./LandingPage/landing";
-import React from "react";
-import {
-  Routes,
-  Route,
-  useNavigate,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
-import RegistrationPage from "./RegistrationPage/registration";
-import EmailVerificationPage from "./components/EmailVerification";
+// import React from "react";
+// import {
+//   Routes,
+//   Route,
+//   useNavigate,
+//   useLocation,
+//   Navigate,
+// } from "react-router-dom";
+// import RegistrationPage from "./RegistrationPage/registration";
+// import EmailVerificationPage from "./components/EmailVerification";
 
-function EmailVerificationWrapper() {
-  const navigate = useNavigate();
+// function EmailVerificationWrapper() {
+//   const navigate = useNavigate();
 
-  const handleVerified = (email) => {
-    navigate("/registration", { state: { email } });
-  };
+//   const handleVerified = (email:string) => {
+//     navigate("/registration", { state: { email } });
+//   };
 
-  return <EmailVerificationPage onVerified={handleVerified} />;
-}
+//   return <EmailVerificationPage onVerified={handleVerified} />;
+// }
 
-function RegistrationWrapper() {
-  const location = useLocation();
-  const email = location.state?.email;
+// function RegistrationWrapper() {
+//   const location = useLocation();
+//   const email = location.state?.email;
 
-  // Prevent access if no email is passed
-  if (!email) return <Navigate to="/" />;
+//   // Prevent access if no email is passed
+//   if (!email) return <Navigate to="/" />;
 
-  return <RegistrationPage email={email} />;
-}
+//   return <RegistrationPage email={email} />;
+// }
 
 export default function App() {
   return (
