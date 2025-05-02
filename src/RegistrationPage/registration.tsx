@@ -61,6 +61,16 @@ export default function RegistrationForm({ email }: RegistrationPageProps) {
     setShowModal(false);
     setModalMessage("");
 
+    // 🛑 Middle name validation
+    if (formData.middle_name && formData.middle_name.trim().length === 1) {
+      setModalMessage(
+        "Middle name must be at least 2 characters long if provided."
+      );
+      setShowModal(true);
+      setLoading(false);
+      return;
+    }
+
     const { data: existingUser, error: fetchError } = await supabase
       .from("medical_professionals")
       .select("*")
@@ -128,7 +138,7 @@ export default function RegistrationForm({ email }: RegistrationPageProps) {
           </div>
         </div>
       )}
-      <main className="w-screen min-h-screen lg:max-h-screen overflow-hidden">
+      <main className="w-screen min-h-screen overflow-x-hidden">
         <section className="grid grid-cols-1 lg:grid-cols-[40%_60%]">
           <div className="bg-[#08312A] w-full min-h-screen grid grid-rows-[65%_35%]">
             {/* Top 70% */}

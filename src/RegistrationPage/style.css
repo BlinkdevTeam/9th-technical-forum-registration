@@ -84,3 +84,32 @@ h1 {
         font-size: 30px;
     }
 }
+
+/* Add this to your CSS */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    /* Hides default calendar icon */
+}
+
+/* .custom-date {
+    position: relative;
+}
+
+.custom-date input[type="date"] {
+    position: relative;
+    padding-right: 40px;
+}
+
+.custom-date::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: url('/calendar-icon.svg') no-repeat center center;
+    background-size: contain;
+    pointer-events: none;
+    filter: invert(30%) sepia(90%) saturate(300%) hue-rotate(180deg);
+} */
