@@ -130,9 +130,9 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = ({
                     <button
                       onClick={sendVerificationCode}
                       disabled={loading}
-                      className="py-3 submit mt-4 w-full"
+                      className="py-3 submit mt-4 w-[148px] h-[60px]"
                     >
-                      {loading ? "Sending..." : "Send Code"}
+                      {loading ? "Sending" : "Send Code"}
                     </button>
                   </div>
                 </>
@@ -155,7 +155,7 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = ({
                     <button
                       onClick={verifyCode}
                       disabled={code.length !== 6}
-                      className="py-3 submit mt-4 w-full"
+                      className="py-3 submit mt-4 w-[148px] h-[60px]"
                     >
                       Verify
                     </button>

@@ -309,8 +309,8 @@ export default function RegistrationForm({ email }: RegistrationPageProps) {
                 </div>
               </div>
 
-              <button type="submit" disabled={loading} className="py-3 submit">
-                {loading ? "Submitting..." : "Submit"}
+              <button type="submit" disabled={loading} className="py-3 w-[148px] h-[60px] submit">
+                {loading ? "Submitting" : "Submit"}
               </button>
 
               {/* {message && <p className="text-center mt-2">{message}</p>} */}
