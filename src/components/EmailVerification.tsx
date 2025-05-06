@@ -127,6 +127,9 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = ({
                       onChange={(e) => setEmail(e.target.value)}
                       className="border p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#08312A]"
                     />
+                    <p className="italic text-red-700 mt-4">
+                      Note: Each email address can only be used once.
+                    </p>
                     <button
                       onClick={sendVerificationCode}
                       disabled={loading}
