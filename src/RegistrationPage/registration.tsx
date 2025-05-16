@@ -100,6 +100,7 @@ export default function RegistrationForm({ email }: RegistrationPageProps) {
       console.error("Error inserting record:", error.message);
       setModalMessage("Registration failed. Please try again.");
     } else {
+      // Comment sendConfirmationEmail out to cancel the email verification
       sendConfirmationEmail();
       setModalMessage(
         "Registration successful! \n\nCheck your email to get your ticket to the event."
@@ -203,6 +204,7 @@ export default function RegistrationForm({ email }: RegistrationPageProps) {
                   required
                   placeholder="Email address"
                   value={formData.email_address}
+                  readOnly
                   onChange={handleChange}
                   className="w-full p-3 border"
                 />
@@ -309,7 +311,11 @@ export default function RegistrationForm({ email }: RegistrationPageProps) {
                 </div>
               </div>
 
-              <button type="submit" disabled={loading} className="py-3 w-[148px] h-[60px] submit">
+              <button
+                type="submit"
+                disabled={loading}
+                className="py-3 w-[148px] h-[60px] submit"
+              >
                 {loading ? "Submitting" : "Submit"}
               </button>
 
