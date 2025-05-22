@@ -9,4 +9,5 @@ export default defineConfig({
     host: '0.0.0.0', // allows access from network
     port: 5173,       // optional; default is 5173
   },
+  base: "/", // Ensure it's not a sub-path
 })
