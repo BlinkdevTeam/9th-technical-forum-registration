@@ -6,15 +6,9 @@ import TechnicalForum from "../assets/BI_9thCATF_LOGO.png";
 import BILogo from "../assets/BI_LOGO_NEONGREEN.png";
 import BIDog from "../assets/Boehringer_AnimalCare_Dog_WalkingtheDog-01_CMYK_002 copy.jpg";
 
-interface RegistrationPageProps {
-  email: string;
-}
-
-export default function ManualRegistrationForm({
-  email,
-}: RegistrationPageProps) {
+export default function ManualRegistrationForm() {
   const [formData, setFormData] = useState({
-    email_address: email || "", // pre-fill with prop
+    email_address: "", // pre-fill with prop
     first_name: "",
     middle_name: "",
     last_name: "",
