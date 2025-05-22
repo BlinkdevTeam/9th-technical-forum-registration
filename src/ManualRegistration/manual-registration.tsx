@@ -20,13 +20,58 @@ export default function ManualRegistrationForm() {
   });
 
   const [loading, setLoading] = useState(false);
-  // const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [emailVerified, setEmailVerified] = useState(false);
 
+  // Helper to return input styles based on disabled state
+  const inputClass = (disabled: boolean) =>
+    `w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#08312A] ${
+      disabled
+        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+        : "bg-white text-black"
+    }`;
+
+  // Disable all inputs except email until emailVerified is true
+  const otherInputsDisabled = !emailVerified || loading;
+
+  // Update form data on input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Check if email exists in supabase on email input blur
+  const checkEmailExists = async () => {
+    const email = formData.email_address.trim();
+    if (!email) {
+      setEmailVerified(false);
+      return;
+    }
+    setLoading(true);
+    setShowModal(false);
+    setModalMessage("");
+
+    const { data: existingUser, error: fetchError } = await supabase
+      .from("medical_professionals")
+      .select("*")
+      .eq("email_address", email)
+      .single();
+
+    if (fetchError && fetchError.code !== "PGRST116") {
+      // Some error other than no rows found
+      setModalMessage("Error checking email. Please try again later.");
+      setShowModal(true);
+      setEmailVerified(false);
+    } else if (existingUser) {
+      setModalMessage("This email is already registered.");
+      setShowModal(true);
+      setEmailVerified(false);
+    } else {
+      // Email is available
+      setEmailVerified(true);
+    }
+    setLoading(false);
   };
 
   const sendConfirmationEmail = () => {
@@ -38,10 +83,10 @@ export default function ManualRegistrationForm() {
 
     emailjs
       .send(
-        "service_1qkyi2i", // 🔁 Replace with actual service ID
-        "template_ein4wz4", // 🔁 Replace with actual template ID
+        "service_1qkyi2i", // Replace with your actual service ID
+        "template_ein4wz4", // Replace with your actual template ID
         templateParams,
-        "sOTpCYbD5KllwgbCD" // 🔁 Replace with actual public key
+        "sOTpCYbD5KllwgbCD" // Replace with your actual public key
       )
       .then(() => {
         console.log("Email sent successfully");
@@ -53,11 +98,18 @@ export default function ManualRegistrationForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!emailVerified) {
+      setModalMessage("Please verify your email first.");
+      setShowModal(true);
+      return;
+    }
+
     setLoading(true);
     setShowModal(false);
     setModalMessage("");
 
-    // 🛑 Middle name validation
+    // Middle name validation
     if (formData.middle_name && formData.middle_name.trim().length === 1) {
       setModalMessage(
         "Middle name must be at least 2 characters long if provided."
@@ -67,6 +119,7 @@ export default function ManualRegistrationForm() {
       return;
     }
 
+    // Double check if email exists before insert (optional but safe)
     const { data: existingUser, error: fetchError } = await supabase
       .from("medical_professionals")
       .select("*")
@@ -96,7 +149,6 @@ export default function ManualRegistrationForm() {
       console.error("Error inserting record:", error.message);
       setModalMessage("Registration failed. Please try again.");
     } else {
-      // Comment sendConfirmationEmail out to cancel the email verification
       sendConfirmationEmail();
       setModalMessage(
         "Registration successful! \n\nCheck your email to get your ticket to the event."
@@ -112,6 +164,7 @@ export default function ManualRegistrationForm() {
         prc_license: "",
         prc_expiration: "",
       });
+      setEmailVerified(false);
     }
 
     setShowModal(true);
@@ -180,7 +233,7 @@ export default function ManualRegistrationForm() {
             </div>
           </div>
 
-          {/*FORM REGISTRATION*/}
+          {/* FORM REGISTRATION */}
 
           <div className="bg-[#F6F5F3] text-black flex flex-col justify-center">
             <form
@@ -200,9 +253,10 @@ export default function ManualRegistrationForm() {
                   required
                   placeholder="Email address"
                   value={formData.email_address}
-                  //   readOnly
                   onChange={handleChange}
-                  className="w-full p-3 border"
+                  onBlur={checkEmailExists}
+                  disabled={loading}
+                  className={inputClass(loading)}
                 />
               </div>
               <div className="flex flex-col md:flex-row gap-4 w-full">
@@ -214,7 +268,8 @@ export default function ManualRegistrationForm() {
                     placeholder="First name"
                     value={formData.first_name}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
                 <div className="flex flex-col w-full">
@@ -224,7 +279,8 @@ export default function ManualRegistrationForm() {
                     placeholder="Middle name"
                     value={formData.middle_name}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
               </div>
@@ -238,7 +294,8 @@ export default function ManualRegistrationForm() {
                     placeholder="Last name"
                     value={formData.last_name}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
                 <div className="flex flex-col w-full">
@@ -250,7 +307,8 @@ export default function ManualRegistrationForm() {
                     placeholder="Name of Clinic/Hospital"
                     value={formData.clinic}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
               </div>
@@ -263,7 +321,8 @@ export default function ManualRegistrationForm() {
                     placeholder="Address"
                     value={formData.address}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
                 <div className="flex flex-col w-full">
@@ -274,7 +333,8 @@ export default function ManualRegistrationForm() {
                     placeholder="Mobile number"
                     value={formData.mobile_number}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
               </div>
@@ -288,34 +348,34 @@ export default function ManualRegistrationForm() {
                     placeholder="PRC License"
                     value={formData.prc_license}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
                 <div className="flex flex-col w-full">
                   <p className="sub-bi-heading text-[#344054]">
-                    PRC Card Expiration
+                    PRC Expiration Date
                   </p>
                   <input
                     name="prc_expiration"
                     type="date"
-                    placeholder="PRC Card Expiration"
                     required
+                    placeholder="PRC Expiration Date"
                     value={formData.prc_expiration}
                     onChange={handleChange}
-                    className="w-full p-3 border"
+                    disabled={otherInputsDisabled}
+                    className={inputClass(otherInputsDisabled)}
                   />
                 </div>
               </div>
 
               <button
+                disabled={!emailVerified || loading}
                 type="submit"
-                disabled={loading}
-                className="py-3 w-[148px] h-[60px] submit"
+                className={`w-full py-3 rounded bg-[#08312A] text-white font-semibold hover:bg-[#06291E] transition disabled:opacity-60 disabled:cursor-not-allowed`}
               >
-                {loading ? "Submitting" : "Submit"}
+                {loading ? "Submitting..." : "Register"}
               </button>
-
-              {/* {message && <p className="text-center mt-2">{message}</p>} */}
             </form>
           </div>
         </section>
