@@ -8,6 +8,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import RegistrationPage from "./RegistrationPage/registration";
+import ManualRegistrationPage from "./ManualRegistration/manual-registration";
 import EmailVerificationPage from "./components/EmailVerification";
 
 function EmailVerificationWrapper() {
@@ -41,6 +42,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<EmailVerificationWrapper />} />
           <Route path="/registration" element={<RegistrationWrapper />} />
+          <Route path="/manual-registration" element={<ManualRegistrationPage />} />
         </Routes>
       </div>
     </>
